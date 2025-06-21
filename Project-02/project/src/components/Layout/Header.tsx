@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+  import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Search, 
@@ -6,7 +6,6 @@ import {
   Settings, 
   User, 
   LogOut, 
-  Wallet, 
   Menu,
   X
 } from 'lucide-react';
@@ -34,12 +33,12 @@ const Header: React.FC = () => {
         animate={{ y: 0 }}
         className="sticky top-0 z-50 backdrop-blur-xl bg-gray-900/80 border-b border-gray-800"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 mr-8"
             >
               <div className="w-8 h-8 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">S</span>
@@ -49,8 +48,7 @@ const Header: React.FC = () => {
               </span>
             </motion.div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
+            <nav className="hidden md:flex flex-1 items-center space-x-8">
               {navItems.map((item) => (
                 <motion.a
                   key={item.name}
@@ -64,7 +62,7 @@ const Header: React.FC = () => {
             </nav>
 
             {/* Search Bar */}
-            <div className="hidden lg:flex items-center flex-1 max-w-md mx-8">
+              <div className="hidden lg:flex items-center max-w-xs w-full">
               <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
@@ -89,69 +87,69 @@ const Header: React.FC = () => {
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </motion.button>
 
-              {/* User Menu */}
-              {user ? (
-                <div className="relative group">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    className="flex items-center space-x-2 p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
-                  >
-                    {user.photoURL ? (
-                      <img
-                        src={user.photoURL}
-                        alt="Profile"
-                        className="w-6 h-6 rounded-full"
-                      />
-                    ) : (
-                      <User className="w-5 h-5 text-gray-400" />
-                    )}
-                    <span className="text-sm text-gray-300 hidden sm:block">
-                      {user.displayName || user.email?.split('@')[0]}
-                    </span>
-                  </motion.button>
-
-                  {/* Dropdown Menu */}
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    <div className="py-2">
-                      <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
-                        <User className="w-4 h-4 mr-3" />
-                        Profile
-                      </a>
-                      <a href="/settings" className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
-                        <Settings className="w-4 h-4 mr-3" />
-                        Settings
-                      </a>
-                      <button
-                        onClick={signOut}
-                        className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
-                      >
-                        <LogOut className="w-4 h-4 mr-3" />
-                        Sign Out
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
+            {/* User Menu */}
+            {user ? (
+              <div className="relative group">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsAuthModalOpen(true)}
-                  className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:from-cyan-600 hover:to-purple-700 transition-all duration-200"
+                  className="flex items-center space-x-2 p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
                 >
-                  Sign In
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt="Profile"
+                      className="w-6 h-6 rounded-full"
+                    />
+                  ) : (
+                    <User className="w-5 h-5 text-gray-400" />
+                  )}
+                  <span className="text-sm text-gray-300 hidden sm:block">
+                    {user.displayName || user.email?.split('@')[0]}
+                  </span>
                 </motion.button>
-              )}
 
-              {/* Mobile Menu Button */}
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="py-2">
+                    <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
+                      <User className="w-4 h-4 mr-3" />
+                      Profile
+                    </a>
+                    <a href="/settings" className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700">
+                      <Settings className="w-4 h-4 mr-3" />
+                      Settings
+                    </a>
+                    <button
+                      onClick={signOut}
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-gray-700"
+                    >
+                      <LogOut className="w-4 h-4 mr-3" />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
               <motion.button
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-gray-400 hover:text-white"
+                onClick={() => setIsAuthModalOpen(true)}
+                className="bg-gradient-to-r from-cyan-500 to-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:from-cyan-600 hover:to-purple-700 transition-all duration-200"
               >
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                Sign In
               </motion.button>
-            </div>
+            )}
+
+            {/* Mobile Menu Button */}
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 text-gray-400 hover:text-white"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </motion.button>
           </div>
+        </div>
         </div>
 
         {/* Mobile Menu */}
