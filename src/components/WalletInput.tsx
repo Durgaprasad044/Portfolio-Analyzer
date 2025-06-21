@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Wallet, AlertCircle } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 import WalletConnect from './WalletConnect';
 
 interface WalletInputProps {
@@ -9,6 +10,7 @@ interface WalletInputProps {
 }
 
 export default function WalletInput({ onAnalyze, loading, error }: WalletInputProps) {
+  const { isDarkMode } = useTheme();
   const [address, setAddress] = useState('');
   const [inputMethod, setInputMethod] = useState<'manual' | 'connect'>('manual');
 
@@ -32,13 +34,21 @@ export default function WalletInput({ onAnalyze, loading, error }: WalletInputPr
     <div className="w-full max-w-2xl mx-auto space-y-6">
       {/* Method Toggle */}
       <div className="flex justify-center">
-        <div className="bg-white/10 backdrop-blur-lg rounded-xl p-1 border border-white/20">
+        <div className={`backdrop-blur-lg rounded-xl p-1 border ${
+          isDarkMode 
+            ? 'bg-white/10 border-white/20' 
+            : 'bg-gray-100 border-gray-300'
+        }`}>
           <button
             onClick={() => setInputMethod('manual')}
             className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
               inputMethod === 'manual'
-                ? 'bg-white/20 text-white shadow-lg'
-                : 'text-white/70 hover:text-white'
+                ? isDarkMode 
+                  ? 'bg-white/20 text-white shadow-lg'
+                  : 'bg-white text-gray-900 shadow-lg'
+                : isDarkMode
+                  ? 'text-white/70 hover:text-white'
+                  : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             Manual Input
@@ -47,8 +57,12 @@ export default function WalletInput({ onAnalyze, loading, error }: WalletInputPr
             onClick={() => setInputMethod('connect')}
             className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
               inputMethod === 'connect'
-                ? 'bg-white/20 text-white shadow-lg'
-                : 'text-white/70 hover:text-white'
+                ? isDarkMode 
+                  ? 'bg-white/20 text-white shadow-lg'
+                  : 'bg-white text-gray-900 shadow-lg'
+                : isDarkMode
+                  ? 'text-white/70 hover:text-white'
+                  : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             Connect Wallet
@@ -59,13 +73,19 @@ export default function WalletInput({ onAnalyze, loading, error }: WalletInputPr
       {inputMethod === 'connect' ? (
         <WalletConnect onWalletConnected={handleWalletConnected} />
       ) : (
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 shadow-2xl">
+        <div className={`backdrop-blur-lg rounded-2xl p-8 border shadow-2xl ${
+          isDarkMode 
+            ? 'bg-white/10 border-white/20' 
+            : 'bg-white/80 border-gray-200'
+        }`}>
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-4">
               <Wallet className="w-8 h-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">Portfolio Risk Analyzer</h2>
-            <p className="text-white/70">
+            <h2 className={`text-3xl font-bold mb-2 ${
+              isDarkMode ? 'text-white' : 'text-gray-900'
+            }`}>Portfolio Risk Analyzer</h2>
+            <p className={isDarkMode ? 'text-white/70' : 'text-gray-600'}>
               Enter your Solana wallet address to analyze your token portfolio risk
             </p>
           </div>
@@ -77,10 +97,16 @@ export default function WalletInput({ onAnalyze, loading, error }: WalletInputPr
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Enter Solana wallet address..."
-                className="w-full px-6 py-4 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                className={`w-full px-6 py-4 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 ${
+                  isDarkMode 
+                    ? 'bg-white/5 border-white/20 text-white placeholder-white/50'
+                    : 'bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-500'
+                }`}
                 disabled={loading}
               />
-              <Search className="absolute right-4 top-4 w-6 h-6 text-white/50" />
+              <Search className={`absolute right-4 top-4 w-6 h-6 ${
+                isDarkMode ? 'text-white/50' : 'text-gray-400'
+              }`} />
             </div>
 
             {error && (
@@ -107,9 +133,11 @@ export default function WalletInput({ onAnalyze, loading, error }: WalletInputPr
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-white/50 text-sm">
+            <p className={`text-sm ${isDarkMode ? 'text-white/50' : 'text-gray-500'}`}>
               Don't have a wallet? Try: <br />
-              <code className="text-purple-300 text-xs">7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU</code>
+              <code className={`text-xs ${
+                isDarkMode ? 'text-purple-300' : 'text-purple-600'
+              }`}>7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU</code>
             </p>
           </div>
         </div>

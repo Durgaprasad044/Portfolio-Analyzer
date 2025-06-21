@@ -1,10 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import Header from './components/Header';
 import WalletInput from './components/WalletInput';
 import PortfolioSummary from './components/PortfolioSummary';
 import TokenTable from './components/TokenTable';
-import ThemeToggle from './components/ThemeToggle';
 import PerformanceTracker from './components/PerformanceTracker';
 import RiskAlerts from './components/RiskAlerts';
 import SocialShare from './components/SocialShare';
@@ -14,12 +16,12 @@ import { fetchMultipleTokenShieldData } from './api/shieldApi';
 import { analyzeToken, analyzePortfolio } from './utils/portfolioAnalyzer';
 import { WalletAnalysis, SocialShareData } from './types/portfolio';
 
-function App() {
+function AppContent() {
+  const { isDarkMode, toggleTheme } = useTheme();
   const [walletAnalyses, setWalletAnalyses] = useState<WalletAnalysis[]>([]);
   const [currentAnalysis, setCurrentAnalysis] = useState<WalletAnalysis | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [showMultiWallet, setShowMultiWallet] = useState(false);
 
   const analyzeWallet = useCallback(async (walletAddress: string) => {
@@ -105,10 +107,6 @@ function App() {
     }
   };
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
   const generateSocialShareData = (): SocialShareData | null => {
     if (!currentAnalysis) return null;
 
@@ -135,22 +133,22 @@ function App() {
   return (
     <div className={`min-h-screen transition-all duration-500 ${
       isDarkMode 
-        ? 'bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900' 
-        : 'bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100'
+        ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900 text-white shadow-inner shadow-black/50' 
+        : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-900'
     }`}>
       <Toaster 
         position="top-right"
         toastOptions={{
           style: {
-            background: 'rgba(255, 255, 255, 0.1)',
+            background: isDarkMode ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
             backdropFilter: 'blur(10px)',
-            color: 'white',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
+            color: isDarkMode ? 'white' : '#1f2937',
+            border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'}`
           }
         }}
       />
       
-      <ThemeToggle isDark={isDarkMode} onToggle={toggleTheme} />
+      <Header isDarkMode={isDarkMode} onToggleTheme={toggleTheme} />
       
       <div className="container mx-auto px-4 py-12">
         {!currentAnalysis ? (
@@ -176,26 +174,40 @@ function App() {
               <motion.h1 
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="text-4xl font-bold text-white mb-4"
+                className={`text-4xl font-bold mb-4 ${
+                  isDarkMode ? 'text-white' : 'text-gray-900'
+                }`}
               >
                 Portfolio Analysis Complete
               </motion.h1>
-              <p className="text-white/70 mb-4">
-                Wallet: <code className="bg-white/10 px-2 py-1 rounded text-purple-300">
+              <p className={`mb-4 ${isDarkMode ? 'text-white/70' : 'text-gray-600'}`}>
+                Wallet: <code className={`px-2 py-1 rounded ${
+                  isDarkMode 
+                    ? 'bg-white/10 text-purple-300' 
+                    : 'bg-gray-200 text-purple-600'
+                }`}>
                   {currentAnalysis.address.slice(0, 8)}...{currentAnalysis.address.slice(-8)}
                 </code>
               </p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => setCurrentAnalysis(null)}
-                  className="text-purple-400 hover:text-purple-300 transition-colors underline"
+                  className={`transition-colors underline ${
+                    isDarkMode 
+                      ? 'text-purple-400 hover:text-purple-300' 
+                      : 'text-purple-600 hover:text-purple-500'
+                  }`}
                 >
                   Analyze Another Wallet
                 </button>
                 {walletAnalyses.length > 1 && (
                   <button
                     onClick={() => setShowMultiWallet(!showMultiWallet)}
-                    className="text-blue-400 hover:text-blue-300 transition-colors underline"
+                    className={`transition-colors underline ${
+                      isDarkMode 
+                        ? 'text-blue-400 hover:text-blue-300' 
+                        : 'text-blue-600 hover:text-blue-500'
+                    }`}
                   >
                     {showMultiWallet ? 'Hide' : 'Show'} Multi-Wallet Comparison
                   </button>
@@ -233,7 +245,9 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              className="text-center py-8 text-white/50"
+              className={`text-center py-8 ${
+                isDarkMode ? 'text-white/50' : 'text-gray-500'
+              }`}
             >
               <p className="text-sm">
                 Last updated: {currentAnalysis.lastUpdated.toLocaleString()}
@@ -252,6 +266,16 @@ function App() {
       {/* Social Share Component */}
       {socialShareData && <SocialShare shareData={socialShareData} />}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
