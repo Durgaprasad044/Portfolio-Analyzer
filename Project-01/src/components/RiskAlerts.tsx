@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TokenAlert } from '../types/portfolio';
-import { AlertTriangle, Bell, X, TrendingDown, TrendingUp, Shield, DollarSign } from 'lucide-react';
+import { AlertTriangle, Bell, X, TrendingDown, TrendingUp, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 

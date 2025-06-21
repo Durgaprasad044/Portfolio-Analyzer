@@ -8,11 +8,13 @@ import { motion } from 'framer-motion';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 interface PerformanceTrackerProps {
-  walletAddress: string;
   currentValue: number;
+  walletAddress: string;
+  // ...other props if any
 }
 
-export default function PerformanceTracker({ walletAddress, currentValue }: PerformanceTrackerProps) {
+
+export default function PerformanceTracker({ currentValue }: PerformanceTrackerProps) {
   const [historicalData, setHistoricalData] = useState<HistoricalAnalysis[]>([]);
   const [timeframe, setTimeframe] = useState<'7d' | '30d' | '90d'>('30d');
 
@@ -114,8 +116,11 @@ export default function PerformanceTracker({ walletAddress, currentValue }: Perf
         position: 'left' as const,
         ticks: {
           color: 'rgba(255, 255, 255, 0.7)',
-          callback: function(value: any) {
-            return '$' + value.toLocaleString();
+          callback: function(this: any, tickValue: string | number) {
+            if (typeof tickValue === 'number') {
+              return '$' + tickValue.toLocaleString();
+            }
+            return '$' + tickValue;
           }
         },
         grid: {

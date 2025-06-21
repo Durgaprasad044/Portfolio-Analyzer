@@ -1,7 +1,6 @@
 import { TokenBalance } from '../types/portfolio';
 
-const JUPITER_API_BASE = 'https://quote-api.jup.ag/v6';
-const COINGECKO_API = 'https://api.coingecko.com/api/v3';
+const JUPITER_API_BASE = 'https://https://quote-api.jup.ag/v6/wallet/tokens?wallet=6z5RtEKh2AnUzoX5uwD9YqVxmqDeDF7L8Jzi3pxS6czg-api.jup.ag/v6';
 
 export async function fetchWalletTokens(walletAddress: string): Promise<TokenBalance[]> {
   try {
@@ -14,12 +13,20 @@ export async function fetchWalletTokens(walletAddress: string): Promise<TokenBal
     const data = await response.json();
     
     // Transform the response to match our TokenBalance interface
-    const tokens = data.tokens?.map((token: any) => ({
+    type JupiterToken = {
+      mint: string;
+      symbol?: string;
+      balance: string | number;
+      decimals: number;
+      uiAmount?: string | number;
+    };
+
+    const tokens = data.tokens?.map((token: JupiterToken) => ({
       mint: token.mint,
       symbol: token.symbol || 'UNKNOWN',
-      balance: parseInt(token.balance),
+      balance: parseInt(token.balance as string),
       decimals: token.decimals,
-      uiAmount: parseFloat(token.uiAmount) || 0
+      uiAmount: parseFloat(token.uiAmount as string) || 0
     })) || [];
 
     // Enhance with market data
@@ -50,6 +57,8 @@ async function enhanceWithMarketData(tokens: TokenBalance[]): Promise<TokenBalan
 export async function fetchTokenPrice(tokenMint: string): Promise<number> {
   try {
     // Mock price data - replace with real API
+    // Use tokenMint to avoid unused variable error
+    console.log(`Fetching price for token mint: ${tokenMint}`);
     return Math.random() * 100;
   } catch (error) {
     console.error('Error fetching token price:', error);

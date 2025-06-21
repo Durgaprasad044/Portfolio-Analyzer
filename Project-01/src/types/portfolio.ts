@@ -9,6 +9,13 @@ export interface TokenBalance {
   holderCount?: number;
   price?: number;
 }
+// ...other imports
+
+export interface PerformanceTrackerProps {
+  walletAddress: string;
+  currentValue: number;
+  // ...other props
+}
 
 export interface ShieldData {
   mint: string;
@@ -103,4 +110,16 @@ export interface SocialShareData {
   totalTokens: number;
   shareUrl: string;
   imageUrl: string;
+}
+export interface TokenBalance {
+  mint: string;
+  symbol: string;
+  name: string;
+  decimals: number;
+  uiAmount: number;
+  price?: number;
+  marketCap?: number;
+  volume24h?: number;
+  holderCount?: number;
+  priceChange24h?: number; // Percentage price change in the last 24h
 }

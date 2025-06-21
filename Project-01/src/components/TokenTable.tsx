@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { AnalyzedToken } from '../types/portfolio';
-import { Search, Shield, AlertTriangle, CheckCircle, Filter, TrendingUp, TrendingDown, Brain, DollarSign } from 'lucide-react';
+import { Search, Shield, AlertTriangle, CheckCircle, Filter, TrendingUp, TrendingDown, Brain } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface TokenTableProps {
@@ -20,7 +20,7 @@ export default function TokenTable({ tokens }: TokenTableProps) {
   }, [tokens]);
 
   const filteredAndSortedTokens = useMemo(() => {
-    let filtered = tokens.filter(token => {
+    const filtered = tokens.filter(token => {
       const matchesSearch = token.symbol.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesRisk = riskFilter === 'all' || token.riskLevel === riskFilter;
       const matchesCategory = categoryFilter === 'all' || token.classification?.category === categoryFilter;
@@ -37,15 +37,17 @@ export default function TokenTable({ tokens }: TokenTableProps) {
         case 'balance':
           comparison = a.uiAmount - b.uiAmount;
           break;
-        case 'risk':
+        case 'risk': {
           const riskOrder = { low: 1, medium: 2, high: 3 };
           comparison = riskOrder[a.riskLevel] - riskOrder[b.riskLevel];
           break;
-        case 'value':
+        }
+        case 'value': {
           const aValue = (a.price || 0) * a.uiAmount;
           const bValue = (b.price || 0) * b.uiAmount;
           comparison = aValue - bValue;
           break;
+        }
         case 'change':
           comparison = (a.priceChange24h || 0) - (b.priceChange24h || 0);
           break;
@@ -126,7 +128,7 @@ export default function TokenTable({ tokens }: TokenTableProps) {
             <Filter className="absolute left-3 top-3 w-5 h-5 text-white/50" />
             <select
               value={riskFilter}
-              onChange={(e) => setRiskFilter(e.target.value as any)}
+              onChange={(e) => setRiskFilter(e.target.value as 'all' | 'low' | 'medium' | 'high')}
               className="pl-10 pr-8 py-2 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none cursor-pointer"
             >
               <option value="all">All Risks</option>

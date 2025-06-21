@@ -36,7 +36,7 @@ export async function analyzeToken(token: TokenBalance, shieldData: ShieldData |
 
   return {
     ...token,
-    shieldData,
+    shieldData: shieldData ?? undefined,
     riskLevel,
     riskLabel,
     classification,

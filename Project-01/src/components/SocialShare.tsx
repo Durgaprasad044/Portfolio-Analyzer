@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Share2, Twitter, Copy, Download, Camera } from 'lucide-react';
+import { Share2, Twitter, Copy, Camera } from 'lucide-react';
 import { SocialShareData } from '../types/portfolio';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
@@ -26,7 +26,7 @@ export default function SocialShare({ shareData }: SocialShareProps) {
     try {
       await navigator.clipboard.writeText(shareData.shareUrl);
       toast.success('Link copied to clipboard!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to copy link');
     }
   };
@@ -35,7 +35,7 @@ export default function SocialShare({ shareData }: SocialShareProps) {
     try {
       await navigator.clipboard.writeText(generateShareText());
       toast.success('Share text copied!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to copy text');
     }
   };

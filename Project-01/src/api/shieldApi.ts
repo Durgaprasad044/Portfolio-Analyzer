@@ -1,6 +1,6 @@
 import { ShieldData, TokenClassification } from '../types/portfolio';
 
-const SHIELD_API_BASE = 'https://shield.jup.ag';
+const SHIELD_API_BASE = 'https://shield.jup.ag/token/So11111111111111111111111111111111111111112';
 
 export async function fetchTokenShieldData(tokenMint: string): Promise<ShieldData | null> {
   try {
@@ -47,10 +47,16 @@ export async function fetchMultipleTokenShieldData(tokenMints: string[]): Promis
   return Promise.all(promises);
 }
 
-export async function classifyToken(tokenMint: string, symbol: string, marketData: any): Promise<TokenClassification> {
+type MarketData = {
+  marketCap?: number;
+  holderCount?: number;
+  volume24h?: number;
+  [key: string]: unknown;
+};
+
+export async function classifyToken(tokenMint: string, symbol: string, marketData: MarketData): Promise<TokenClassification> {
   try {
     // AI-driven classification logic (mock implementation)
-    const categories = ['Meme', 'Utility', 'DeFi', 'Gaming', 'NFT', 'Scam', 'Rug', 'Unknown'] as const;
     
     // Simple heuristic-based classification
     let category: TokenClassification['category'] = 'Unknown';
@@ -61,15 +67,15 @@ export async function classifyToken(tokenMint: string, symbol: string, marketDat
       category = 'Meme';
       confidence = 0.8;
       reasoning = 'Token name suggests meme token characteristics';
-    } else if (marketData?.marketCap > 1000000000) {
+    } else if (marketData?.marketCap !== undefined && marketData.marketCap > 1000000000) {
       category = 'Utility';
       confidence = 0.7;
       reasoning = 'High market cap suggests established utility token';
-    } else if (marketData?.holderCount < 100) {
+    } else if (marketData?.holderCount !== undefined && marketData.holderCount < 100) {
       category = 'Rug';
       confidence = 0.6;
       reasoning = 'Very low holder count raises rug pull concerns';
-    } else if (marketData?.volume24h < 1000) {
+    } else if (marketData?.volume24h !== undefined && marketData.volume24h < 1000) {
       category = 'Scam';
       confidence = 0.5;
       reasoning = 'Extremely low trading volume is suspicious';

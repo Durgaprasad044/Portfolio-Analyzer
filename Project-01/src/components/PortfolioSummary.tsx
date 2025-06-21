@@ -1,6 +1,6 @@
 import React from 'react';
 import { WalletAnalysis } from '../types/portfolio';
-import { TrendingUp, Shield, AlertTriangle, Award, DollarSign, Target } from 'lucide-react';
+import { TrendingUp, Shield, Award, DollarSign, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface PortfolioSummaryProps {
@@ -10,14 +10,6 @@ interface PortfolioSummaryProps {
 export default function PortfolioSummary({ analysis }: PortfolioSummaryProps) {
   const { analysis: portfolio } = analysis;
 
-  const getRiskColor = (level: string) => {
-    switch (level) {
-      case 'low': return 'text-green-400';
-      case 'medium': return 'text-orange-400';
-      case 'high': return 'text-red-400';
-      default: return 'text-gray-400';
-    }
-  };
 
   const getBgColor = (label: string) => {
     switch (label) {
@@ -176,7 +168,7 @@ export default function PortfolioSummary({ analysis }: PortfolioSummaryProps) {
               const mediumStroke = (mediumPercentage / 100) * circumference;
               const highStroke = (highPercentage / 100) * circumference;
               
-              let currentOffset = 0;
+              const currentOffset = 0;
               
               return (
                 <>

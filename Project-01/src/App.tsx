@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { AuthProvider } from './contexts/AuthContext';
-import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext.tsx';
 import Header from './components/Header';
 import WalletInput from './components/WalletInput';
 import PortfolioSummary from './components/PortfolioSummary';
