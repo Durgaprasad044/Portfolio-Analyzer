@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import ReCAPTCHA from 'react-google-recaptcha';
 import { useAuth } from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
 
@@ -17,15 +16,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!recaptchaValue) {
-      toast.error('Please complete the reCAPTCHA verification');
-      return;
-    }
 
     setLoading(true);
     try {
@@ -37,17 +30,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       onClose();
     } catch (error) {
       console.error('Auth error:', error);
+      toast.error('Authentication failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSocialAuth = async (provider: 'google' | 'twitter') => {
-    if (!recaptchaValue) {
-      toast.error('Please complete the reCAPTCHA verification');
-      return;
-    }
-
     setLoading(true);
     try {
       if (provider === 'google') {
@@ -58,6 +47,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       onClose();
     } catch (error) {
       console.error('Social auth error:', error);
+      toast.error('Authentication failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -99,7 +89,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleSocialAuth('google')}
-                disabled={loading || !recaptchaValue}
+                disabled={loading}
                 className="w-full flex items-center justify-center space-x-3 p-3 bg-white text-gray-900 rounded-lg font-medium hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -115,7 +105,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleSocialAuth('twitter')}
-                disabled={loading || !recaptchaValue}
+                disabled={loading}
                 className="w-full flex items-center justify-center space-x-3 p-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -174,20 +164,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* reCAPTCHA */}
-              <div className="flex justify-center">
-                <ReCAPTCHA
-                  sitekey="your-recaptcha-site-key" // Replace with your actual site key
-                  onChange={setRecaptchaValue}
-                  theme="dark"
-                />
-              </div>
-
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                disabled={loading || !recaptchaValue}
+                disabled={loading}
                 className="w-full py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Create Account')}
